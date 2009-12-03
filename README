@@ -1,0 +1,11 @@
+ XOR Doubly linked list with Forward/Reverse Iterators
+
+     Node: [  A  ] [  B  ] [  C  ] [  D  ] 
+     Link:   0^B     A^C     B^D     C^0
+    
+     next(A) = 0 ^ (A->link)
+     prev(A) = (A->link) ^ B
+    
+     In general,
+     next(node) = ptr_to_prev_node ^ (node->link)
+     prev(node) = (node->link) ^ ptr_to_next_node
