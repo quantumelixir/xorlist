@@ -171,18 +171,18 @@ insert_node_next_to (List* list, Node* node, Iterator* target_iter) {
         // manage links
         node->link = XOR(curr_node, next_node);
         if (curr_node)
-            curr_node->link = XOR(node,
-                    XOR((curr_node ? curr_node->link : NULL), next_node));
+            curr_node->link = XOR(node, XOR(curr_node->link, next_node));
         if (next_node)
-            next_node->link = XOR(node,
-                    XOR((next_node ? next_node->link : NULL), curr_node));
+            next_node->link = XOR(node, XOR(next_node->link, curr_node));
 
-        // update head
-        if (!next_node && list->head == curr_node)
-            list->head = node;
-        // update tail
-        if (list->tail == curr_node && !next_node)
-            list->tail = node;
+        if (!next_node) { 
+            // update head
+            if (list->head == curr_node && !target_iter->dir)
+                list->head = node;
+            // update tail
+            else if (list->tail == curr_node)
+                list->tail = node;
+        }
 
         // Make the iter point to new node
         target_iter->first = target_iter->dir ? curr_node : node ;
@@ -203,14 +203,8 @@ insert_node_next_to (List* list, Node* node, Iterator* target_iter) {
 
 int
 insert_node_before_head (List* list, Node* node) {
-    /*
-     *Iterator* iter = forward_iter (list);
-     *toggle_direction (iter);
-     */
-    Iterator *iter;
-    iter->first = list->head;
-    iter->second = list->head ? list->head : NULL;
-    iter->dir = 0;
+    Iterator* iter = forward_iter (list);
+    toggle_direction (iter);
     insert_node_next_to (list, node, iter);
     free_iter (iter);
 
