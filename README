@@ -11,7 +11,7 @@
      prev(node) = (node->link) ^ ptr_to_next_node
 
 TODO:
-    Use #define macros for type-casting and recasting
+    DONE Use #define macros for type-casting and recasting
     Cleaner API
     Optimize memory allocations
         -> Make fewer and bigger allocations rather than a lot of small ones
