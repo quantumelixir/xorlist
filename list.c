@@ -41,11 +41,6 @@ reverse_iter (List* list) {
 }
 
 void
-free_iter (Iterator* iter) {
-    free (iter);
-}
-
-void
 toggle_direction (Iterator* iter) {
     Node* temp = NEXT(iter);
 
@@ -127,7 +122,7 @@ free_list (List* list) {
         move(iter);
     }
 
-    free_iter (iter);
+    free (iter);
 }
 
 void
@@ -205,7 +200,7 @@ insert_node_before_head (List* list, Node* node) {
     Iterator* iter = forward_iter (list);
     toggle_direction (iter);
     insert_node_next_to (list, node, iter);
-    free_iter (iter);
+    free (iter);
 
     return TRUE;
 }
@@ -215,7 +210,7 @@ insert_node_after_tail (List* list, Node* node) {
     Iterator* iter = reverse_iter (list);
     toggle_direction (iter);
     insert_node_next_to (list, node, iter);
-    free_iter (iter);
+    free (iter);
 
     return TRUE;
 }

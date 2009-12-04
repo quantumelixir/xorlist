@@ -31,9 +31,6 @@ typedef struct {
 Iterator* forward_iter (List* list);
 Iterator* reverse_iter (List* list);
 
-/* destory iterator */
-void free_iter (Iterator* iter);
-
 /* manipulate iterators */
 void toggle_direction (Iterator* iter);
 bool move (Iterator* iter);
