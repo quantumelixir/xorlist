@@ -19,6 +19,7 @@
  *    iter->dir = 0 => Reverse Iterator
  *      iter->first gives the location pointed to by iter
  */
+
 Iterator*
 forward_iter (List* list) {
     Iterator* iter = (Iterator *) malloc (sizeof (Iterator));
@@ -84,7 +85,7 @@ move (Iterator* iter) {
     else {
         temp = iter->first;
         if (iter->first)
-            iter->second = XOR(iter->second, iter->first->link);
+            iter->first = XOR(iter->second, iter->first->link);
         else
             return FALSE;
         iter->second = temp;
@@ -103,7 +104,7 @@ rmove (Iterator* iter) {
     toggle_direction (iter);
     move (iter);
     toggle_direction (iter);
-    return iter->dir ? iter->second : iter->first;
+    return iter->dir == FORWARD ? iter->second : iter->first;
 }
 
 List*
@@ -132,7 +133,7 @@ free_list (List* list) {
 void
 traverse_list_in_dir (List* list,
         iter_type dir, void (*callback)(void* data)) {
-    Iterator* iter = dir ? forward_iter (list) : reverse_iter (list);
+    Iterator* iter = dir == FORWARD ? forward_iter (list) : reverse_iter (list);
     Node* temp = DEREF(iter);
 
     while (move (iter)) {
@@ -183,8 +184,8 @@ insert_node_next_to (List* list, Node* node, Iterator* target_iter) {
         }
 
         // Make the iter point to new node
-        target_iter->first = target_iter->dir ? curr_node : node ;
-        target_iter->second = target_iter->dir ? node : curr_node ;
+        target_iter->first = target_iter->dir == FORWARD ? curr_node : node ;
+        target_iter->second = target_iter->dir == FORWARD ? node : curr_node ;
     }
     // first node of the list
     else {
@@ -192,8 +193,8 @@ insert_node_next_to (List* list, Node* node, Iterator* target_iter) {
         list->head = list->tail = node;
 
         // Make the iter point to new node
-        target_iter->first = target_iter->dir ? NULL : list->tail ;
-        target_iter->second = target_iter->dir ? list->head : NULL ;
+        target_iter->first = target_iter->dir == FORWARD ? NULL : list->tail ;
+        target_iter->second = target_iter->dir == FORWARD ? list->head : NULL ;
     }
 
     return TRUE;

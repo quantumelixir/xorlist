@@ -30,7 +30,7 @@ main (int argc, char **argv) {
     printf ("-----\n");
 
     insert_node_after_tail (list, four);
-    traverse_list_forward (list, print_string);
+    traverse_list_reverse (list, print_string);
     printf ("-----\n");
 
     free_list (list);
