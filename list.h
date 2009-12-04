@@ -3,10 +3,23 @@
 
 #include "node.h"
 
+// Boolean type
+typedef enum {
+    FALSE = 0, TRUE = 1
+}bool;
+
+// Iterator type
+typedef enum {
+    REVERSE = 0, FORWARD = 1
+}iter_type;
+
+// List iterator requires pointers to two
+// nodes (as XOR is a binary operation) and
+// have a direction
 typedef struct {
     Node* first;
     Node* second;
-    int dir;
+    iter_type dir;
 }Iterator;
 
 typedef struct {
@@ -23,7 +36,7 @@ void free_iter (Iterator* iter);
 
 /* manipulate iterators */
 void toggle_direction (Iterator* iter);
-int move (Iterator* iter);
+bool move (Iterator* iter);
 Node* rmove (Iterator* iter);
 
 /* use iterators */
@@ -42,13 +55,13 @@ List* create_empty_list ();
 void free_list (List* list);
 
 /* list manipulation */
-int insert_node_next_to (List* list, Node* node, Iterator* target_iter);
-int insert_node_before_head (List* list, Node* node);
-int insert_node_after_tail (List* list, Node* node);
-int delete_node (List* list, Iterator* target_iter);
+bool insert_node_next_to (List* list, Node* node, Iterator* target_iter);
+bool insert_node_before_head (List* list, Node* node);
+bool insert_node_after_tail (List* list, Node* node);
+bool delete_node (List* list, Iterator* target_iter);
 
 /* list traversal */
-void traverse_list_in_dir (List* list, int dir,
+void traverse_list_in_dir (List* list, iter_type dir,
         void (*callback)(void* data));
 void traverse_list_forward (List* list,
         void (*callback)(void* data));

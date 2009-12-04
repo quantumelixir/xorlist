@@ -19,13 +19,12 @@
  *    iter->dir = 0 => Reverse Iterator
  *      iter->first gives the location pointed to by iter
  */
-
 Iterator*
 forward_iter (List* list) {
     Iterator* iter = (Iterator *) malloc (sizeof (Iterator));
     iter->first = NULL;
     iter->second = list->head;
-    iter->dir = 1;
+    iter->dir = FORWARD;
 
     return iter;
 }
@@ -35,7 +34,7 @@ reverse_iter (List* list) {
     Iterator* iter = (Iterator *) malloc (sizeof (Iterator));
     iter->first = list->tail;
     iter->second = NULL;
-    iter->dir = 0;
+    iter->dir = REVERSE;
 
     return iter;
 }
@@ -53,12 +52,12 @@ toggle_direction (Iterator* iter) {
     if (iter->dir) { 
         iter->first = iter->second;
         iter->second = temp;
-        iter->dir = 0;
+        iter->dir = REVERSE;
     }
     else {
         iter->second = iter->first;
         iter->first = temp;
-        iter->dir = 1;
+        iter->dir = FORWARD;
     }
 }
 
@@ -70,7 +69,7 @@ toggle_direction (Iterator* iter) {
  * will yield unsuccessful move operations and
  * will not move the iterator beyond those limits
  */
-int
+bool
 move (Iterator* iter) {
     Node* temp = NULL;
 
@@ -79,7 +78,7 @@ move (Iterator* iter) {
         if (iter->second)
             iter->second = XOR(iter->first, iter->second->link);
         else
-            return 0;
+            return FALSE;
         iter->first = temp;
     }
     else {
@@ -87,11 +86,11 @@ move (Iterator* iter) {
         if (iter->first)
             iter->second = XOR(iter->second, iter->first->link);
         else
-            return 0;
+            return FALSE;
         iter->second = temp;
     }
 
-    return 1;
+    return TRUE;
 }
 
 /*
@@ -132,7 +131,7 @@ free_list (List* list) {
 
 void
 traverse_list_in_dir (List* list,
-        int dir, void (*callback)(void* data)) {
+        iter_type dir, void (*callback)(void* data)) {
     Iterator* iter = dir ? forward_iter (list) : reverse_iter (list);
     Node* temp = DEREF(iter);
 
@@ -147,13 +146,13 @@ traverse_list_in_dir (List* list,
 void
 traverse_list_forward (List* list,
         void (*callback)(void* data)) {
-    traverse_list_in_dir (list, 1, callback);
+    traverse_list_in_dir (list, FORWARD, callback);
 }
 
 void
 traverse_list_reverse (List* list,
         void (*callback)(void* data)) {
-    traverse_list_in_dir (list, 0, callback);
+    traverse_list_in_dir (list, REVERSE, callback);
 }
 
 /*
@@ -162,7 +161,7 @@ traverse_list_reverse (List* list,
  *
  * Modifies the iterator to point to the new node
  */
-int
+bool
 insert_node_next_to (List* list, Node* node, Iterator* target_iter) {
     Node* curr_node = DEREF(target_iter);
     Node* next_node = NEXT(target_iter);
@@ -175,12 +174,11 @@ insert_node_next_to (List* list, Node* node, Iterator* target_iter) {
         if (next_node)
             next_node->link = XOR(node, XOR(next_node->link, curr_node));
 
+        // manage list head/tail
         if (!next_node) { 
-            // update head
-            if (list->head == curr_node && !target_iter->dir)
+            if (list->head == curr_node && target_iter->dir == REVERSE)
                 list->head = node;
-            // update tail
-            else if (list->tail == curr_node)
+            else if (list->tail == curr_node && target_iter->dir == FORWARD)
                 list->tail = node;
         }
 
@@ -198,40 +196,40 @@ insert_node_next_to (List* list, Node* node, Iterator* target_iter) {
         target_iter->second = target_iter->dir ? list->head : NULL ;
     }
 
-    return 1;
+    return TRUE;
 }
 
-int
+bool
 insert_node_before_head (List* list, Node* node) {
     Iterator* iter = forward_iter (list);
     toggle_direction (iter);
     insert_node_next_to (list, node, iter);
     free_iter (iter);
 
-    return 1;
+    return TRUE;
 }
 
-int
+bool
 insert_node_after_tail (List* list, Node* node) {
     Iterator* iter = reverse_iter (list);
     toggle_direction (iter);
     insert_node_next_to (list, node, iter);
     free_iter (iter);
 
-    return 1;
+    return TRUE;
 }
 
 /*
  * Deletes the node pointed to by target_iter from the list
  */
-int
+bool
 delete_node_from_list (List* list, Iterator* target_iter) {
     Node* curr_node = DEREF(target_iter);
     Node* next_node = NEXT(target_iter);
     Node* prev_node = PREV(target_iter);
 
     if (!curr_node)
-        return 0;
+        return FALSE;
 
     // middle of the list
     if (prev_node && next_node) { 
@@ -260,5 +258,5 @@ delete_node_from_list (List* list, Iterator* target_iter) {
 
     free_node (curr_node);
 
-    return 1;
+    return TRUE;
 }
