@@ -27,9 +27,13 @@ int move (Iterator* iter);
 Node* rmove (Iterator* iter);
 
 /* use iterators */
-Node* dereference (Iterator* iter);
-Node* next (Iterator* iter);
-Node* prev (Iterator* iter);
+#define DEREF(A) ((A)->dir ? (A)->second : (A)->first)
+#define XOR(A,B) ((Node *)(((int)(A)) ^ ((int)(B))))
+#define PREV(A) ((A)->dir ? (A)->first : (A)->second)
+#define NEXT(A) ((((A)->dir == 1 && !(A)->second) ||             \
+                ((A)->dir == 0 && !(A)->first)) ? NULL :         \
+                ((A)->dir ? XOR((A)->first, (A)->second->link) : \
+                XOR((A)->first->link, (A)->second)))
 
 /* list creation */
 List* create_empty_list ();

@@ -15,14 +15,12 @@ main (int argc, char **argv) {
     Node* three = create_node ("three", 6);
 
     List* list = create_empty_list ();
-
-    insert_node_before_head (list, one);
+    insert_node_before_head (list, three);
     insert_node_before_head (list, two);
+    insert_node_before_head (list, one);
     traverse_list_forward (list, print_string);
 
     free_list (list);
-    printf ("Hello!\n");
-    free_node (three);
 
     return 0;
 }
