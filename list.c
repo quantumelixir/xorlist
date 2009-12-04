@@ -133,15 +133,15 @@ free_list (List* list) {
 void
 traverse_list_in_dir (List* list,
         iter_type dir, void (*callback)(void* data)) {
-    Iterator* iter = dir == FORWARD ? forward_iter (list) : reverse_iter (list);
-    Node* temp = DEREF(iter);
+    Node* curr = dir == FORWARD ? list->head : list->tail;
+    Node* prev = NULL, *temp;
 
-    while (move (iter)) {
-        callback (temp->data);
-        temp = DEREF(iter);
+    while (curr) {
+        callback (curr->data);
+        temp = curr;
+        curr = XOR(curr->link, prev);
+        prev = temp;
     }
-
-    free_iter (iter);
 }
 
 void
