@@ -5,13 +5,10 @@
 #include "node.h"
 
 Node*
-create_node (void* data, unsigned int n) {
+create_node (void* data) {
     Node* newnode = (Node *) malloc (sizeof (Node));
 
-    newnode->data = (void *) malloc (n);
-    memcpy (newnode->data, data, n);
-    newnode->size = n;
-
+    newnode->data = data;
     newnode->link = NULL;
 
     return newnode;
@@ -19,6 +16,5 @@ create_node (void* data, unsigned int n) {
 
 void
 free_node (Node* node) {
-    free (node->data);
     free (node);
 }

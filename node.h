@@ -5,12 +5,11 @@
 
 typedef struct Nd {
     void* data;
-    unsigned int size;
     struct Nd* link;
 }Node;
 
 /* create */
-Node* create_node (void* data, unsigned int n);
+Node* create_node (void* data);
 
 /* destroy */
 void free_node (Node* node);
