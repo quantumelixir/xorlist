@@ -1,8 +1,6 @@
 #ifndef __NODE_H__
 #define __NODE_H__
 
-#include <stdio.h>
-
 typedef struct Nd {
     void* data;
     struct Nd* link;
