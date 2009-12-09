@@ -7,10 +7,15 @@
 /* List iterator requires pointers to two
  * nodes (as XOR is a binary operation)
  */
+typedef enum {
+    REVERSE, FORWARD
+}IteratorType;
+
 typedef struct _Iterator Iterator;
 struct _Iterator {
     Node* curr;
     Node* prev;
+    IteratorType type;
 };
 
 /* everything depends on this being able to work! */

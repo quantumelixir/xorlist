@@ -26,6 +26,7 @@ forward_iter (List* list) {
     Iterator* iter = (Iterator *) malloc (sizeof (Iterator));
     iter->curr = list->head;
     iter->prev = NULL;
+    iter->type = FORWARD;
 
     return iter;
 }
@@ -35,6 +36,7 @@ reverse_iter (List* list) {
     Iterator* iter = (Iterator *) malloc (sizeof (Iterator));
     iter->curr = list->tail;
     iter->prev = NULL;
+    iter->type = REVERSE;
 
     return iter;
 }
@@ -56,6 +58,7 @@ toggle_direction (Iterator* iter) {
         iter->prev = NEXT (iter);
     else
         return FALSE;
+    iter->type = !iter->type;
     return TRUE;
 }
 

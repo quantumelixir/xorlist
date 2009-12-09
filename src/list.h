@@ -25,7 +25,7 @@ void free_list (List* list);
 bool insert_node_next_to (List* list, Node* node, Iterator* iter);
 bool insert_node_before_head (List* list, Node* node);
 bool insert_node_after_tail (List* list, Node* node);
-bool delete_node (List* list, Iterator* target_iter);
+bool delete_node_from_list (List* list, Iterator* iter);
 
 /* list traversal */
 void traverse_list_forward (List* list, void (*callback)(void* data));

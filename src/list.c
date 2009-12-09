@@ -29,6 +29,7 @@ void
 traverse_list_forward (List* list, void (*callback)(void* data)) {
     temp_iter.curr = list->head;
     temp_iter.prev = NULL;
+    temp_iter.type = FORWARD;
 
     Node* temp = DEREF (&temp_iter);
     while (move (&temp_iter)) {
@@ -41,6 +42,7 @@ void
 traverse_list_reverse (List* list, void (*callback)(void* data)) {
     temp_iter.curr = list->tail;
     temp_iter.prev = NULL;
+    temp_iter.type = REVERSE;
 
     Node* temp = DEREF (&temp_iter);
     while (move (&temp_iter)) {
@@ -52,16 +54,17 @@ traverse_list_reverse (List* list, void (*callback)(void* data)) {
 /*
  * Inserts a node after the target node in the
  * direction of the iterator that points to it
- *
- * Modifies the iterator to point to the new node
  */
 bool
 insert_node_next_to (List* list, Node* node, Iterator* iter) {
-    Node* curr_node = DEREF (iter);
-    Node* next_node = NEXT (iter);
+    Node* curr_node;
+    Node* next_node;
 
     // if not the first node of the list
-    if (curr_node || next_node) {
+    if (list->size) {
+        curr_node = DEREF (iter);
+        next_node = NEXT (iter);
+
         // manage links
         node->link = XOR (curr_node, next_node);
         if (curr_node)
@@ -69,11 +72,11 @@ insert_node_next_to (List* list, Node* node, Iterator* iter) {
         if (next_node)
             next_node->link = XOR (node, XOR (next_node->link, curr_node));
 
-        // move the list head/tail but not both at the same time!
+        // update the list head/tail but not both at the same time!
         if (!next_node) { 
-            if (list->head == curr_node)
+            if (iter->type == REVERSE)
                 list->head = node;
-            else if (list->tail == curr_node)
+            else if (iter->type == FORWARD)
                 list->tail = node;
         }
     }
@@ -85,10 +88,6 @@ insert_node_next_to (List* list, Node* node, Iterator* iter) {
 
     list->size++;
 
-    // Should we make the iter point to new node?
-    //iter->curr = node;
-    //iter->prev = NULL;
-
     return TRUE;
 }
 
@@ -96,6 +95,7 @@ bool
 insert_node_before_head (List* list, Node* node) {
     temp_iter.curr = list->head;
     temp_iter.prev = NULL;
+    temp_iter.type = FORWARD;
     toggle_direction (&temp_iter);
     insert_node_next_to (list, node, &temp_iter);
 
@@ -106,6 +106,7 @@ bool
 insert_node_after_tail (List* list, Node* node) {
     temp_iter.curr = list->tail;
     temp_iter.prev = NULL;
+    temp_iter.type = REVERSE;
     toggle_direction (&temp_iter);
     insert_node_next_to (list, node, &temp_iter);
 
@@ -141,20 +142,21 @@ delete_node_from_list (List* list, Iterator* iter) {
             list->head = list->tail = NULL;
         else {
             // update head
-            if (list->head == curr_node)
+            if (iter->type == FORWARD) {
                 list->head = next_node;
+                next_node->link = XOR (next_node->link, curr_node);
+            }
             // update tail
-            if (list->tail == curr_node)
-                list->tail = prev_node;
+            else if (iter->type == REVERSE) {
+                list->tail = next_node;
+                next_node->link = XOR (next_node->link, curr_node);
+            }
         }
     }
 
     free_node (curr_node);
 
     list->size--;
-
-    // iter now points to an invalid location
-    // should we do something about it?
 
     return TRUE;
 }
