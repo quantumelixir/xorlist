@@ -48,9 +48,9 @@ free_iter (Iterator* iter) {
  * Can toggle the direction of iterator only
  * if the iterator points to a non-null node
  *
- * Returns if the toggle was successful
+ * Returns TRUE if the toggle was successful
  */
-bool
+inline bool
 toggle_direction (Iterator* iter) {
     if (iter->curr)
         iter->prev = NEXT (iter);

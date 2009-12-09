@@ -1,8 +1,9 @@
 #include <malloc.h>
-
 #include "node.h"
 #include "iterator.h"
 #include "list.h"
+
+static Iterator temp_iter;
 
 List*
 create_empty_list () {
@@ -14,36 +15,37 @@ create_empty_list () {
 
 void
 free_list (List* list) {
-    Iterator* iter = forward_iter (list);
+    temp_iter.curr = list->head;
+    temp_iter.prev = NULL;
 
-    Node* temp = DEREF (iter);
-    while (move (iter)) {
+    Node* temp = DEREF (&temp_iter);
+    while (move (&temp_iter)) {
         free_node (temp);
-        temp = DEREF (iter);
+        temp = DEREF (&temp_iter);
     }
-
-    free_iter (iter);
 }
 
 void
 traverse_list_forward (List* list, void (*callback)(void* data)) {
-    Iterator* iter = forward_iter (list);
+    temp_iter.curr = list->head;
+    temp_iter.prev = NULL;
 
-    Node* temp = DEREF (iter);
-    while (move (iter)) {
+    Node* temp = DEREF (&temp_iter);
+    while (move (&temp_iter)) {
         callback (temp->data);
-        temp = DEREF (iter);
+        temp = DEREF (&temp_iter);
     }
 }
 
 void
 traverse_list_reverse (List* list, void (*callback)(void* data)) {
-    Iterator* iter = reverse_iter (list);
+    temp_iter.curr = list->tail;
+    temp_iter.prev = NULL;
 
-    Node* temp = DEREF (iter);
-    while (move (iter)) {
+    Node* temp = DEREF (&temp_iter);
+    while (move (&temp_iter)) {
         callback (temp->data);
-        temp = DEREF (iter);
+        temp = DEREF (&temp_iter);
     }
 }
 
@@ -92,20 +94,20 @@ insert_node_next_to (List* list, Node* node, Iterator* iter) {
 
 bool
 insert_node_before_head (List* list, Node* node) {
-    Iterator* iter = forward_iter (list);
-    toggle_direction (iter);
-    insert_node_next_to (list, node, iter);
-    free (iter);
+    temp_iter.curr = list->head;
+    temp_iter.prev = NULL;
+    toggle_direction (&temp_iter);
+    insert_node_next_to (list, node, &temp_iter);
 
     return TRUE;
 }
 
 bool
 insert_node_after_tail (List* list, Node* node) {
-    Iterator* iter = reverse_iter (list);
-    toggle_direction (iter);
-    insert_node_next_to (list, node, iter);
-    free (iter);
+    temp_iter.curr = list->tail;
+    temp_iter.prev = NULL;
+    toggle_direction (&temp_iter);
+    insert_node_next_to (list, node, &temp_iter);
 
     return TRUE;
 }
