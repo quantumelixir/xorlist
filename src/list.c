@@ -5,6 +5,21 @@
 
 static Iterator temp_iter;
 
+/* iterator initializers */
+inline void
+forward_iter_init (List* list, Iterator* iter) {
+    iter->curr = list->head;
+    iter->prev = NULL;
+    iter->type = FORWARD;
+}
+
+inline void
+reverse_iter_init (List* list, Iterator* iter) {
+    iter->curr = list->tail;
+    iter->prev = NULL;
+    iter->type = REVERSE;
+}
+
 List*
 create_empty_list () {
     List* list = (List *) malloc (sizeof (List));
