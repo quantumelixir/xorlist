@@ -1,4 +1,5 @@
  XOR Doubly linked list with Forward/Reverse Iterators
+ [Link: http://en.wikipedia.org/wiki/XOR_linked_list]
 
      Node: [  A  ] [  B  ] [  C  ] [  D  ] 
      Link:   0^B     A^C     B^D     C^0
@@ -9,10 +10,3 @@
      In general,
      next(node) = ptr_to_prev_node ^ (node->link)
      prev(node) = (node->link) ^ ptr_to_next_node
-
-TODO:
-    DONE Use #define macros for type-casting and recasting
-    Cleaner API
-    Optimize memory allocations
-        -> Make fewer and bigger allocations rather than a lot of small ones
-

@@ -1,0 +1,3 @@
+Mimic glib-2.22's GList API
+Eventually make it easy to replace GList with a compile-time switch
+Benchmark the two versions
