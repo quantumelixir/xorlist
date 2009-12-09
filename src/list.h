@@ -15,8 +15,8 @@ typedef struct {
 List* create_empty_list ();
 
 /* create iterators */
-Iterator* forward_iter (List* list);
-Iterator* reverse_iter (List* list);
+void forward_iter_init (List* list, Iterator* iter);
+void reverse_iter_init (List* list, Iterator* iter);
 
 /* list deletion */
 void free_list (List* list);

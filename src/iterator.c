@@ -21,31 +21,6 @@
  *    iterator they are operating with.
  */
 
-Iterator*
-forward_iter (List* list) {
-    Iterator* iter = (Iterator *) malloc (sizeof (Iterator));
-    iter->curr = list->head;
-    iter->prev = NULL;
-    iter->type = FORWARD;
-
-    return iter;
-}
-
-Iterator*
-reverse_iter (List* list) {
-    Iterator* iter = (Iterator *) malloc (sizeof (Iterator));
-    iter->curr = list->tail;
-    iter->prev = NULL;
-    iter->type = REVERSE;
-
-    return iter;
-}
-
-void
-free_iter (Iterator* iter) {
-    free (iter);
-}
-
 /*
  * Can toggle the direction of iterator only
  * if the iterator points to a non-null node
