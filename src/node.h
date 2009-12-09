@@ -1,10 +1,17 @@
 #ifndef __NODE_H__
 #define __NODE_H__
 
-typedef struct Nd {
+/*
+ * The XOR Doubly Linked List requires
+ * only one pointer per node
+ */
+
+typedef struct NodeTag Node;
+struct NodeTag {
     void* data;
-    struct Nd* link;
-}Node;
+    Node* link;
+};
+
 
 /* create */
 Node* create_node (void* data);
