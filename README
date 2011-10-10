@@ -1,5 +1,7 @@
- XOR Doubly linked list with Forward/Reverse Iterators
- [Link: http://en.wikipedia.org/wiki/XOR_linked_list]
+ XOR Doubly linked list with Forward/Reverse Iterators that uses only one
+ pointer per node by using a bitwise XOR hack on pointer addresses (unsafe)
+
+Example:
 
      Node: [  A  ] [  B  ] [  C  ] [  D  ] 
      Link:   0^B     A^C     B^D     C^0
@@ -10,3 +12,5 @@
      In general,
      next(node) = ptr_to_prev_node ^ (node->link)
      prev(node) = (node->link) ^ ptr_to_next_node
+
+ [Link: http://en.wikipedia.org/wiki/XOR_linked_list]
